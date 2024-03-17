@@ -1,0 +1,21 @@
+#
+# see also:
+# https://cloud.google.com/endpoints/docs/grpc/grpc-service-config
+# https://cloud.google.com/endpoints/docs/grpc-service-config/reference/rpc/google.api#service
+#
+
+type: google.api.Service
+config_version: 3
+
+apis:
+  - name: com.github.kaedwen.v1.Remote
+
+usage:
+  rules:
+    - selector: "*"
+      allow_unregistered_calls: false
+
+http:
+  rules:
+    - selector: com.github.kaedwen.v1.Remote.PressKey
+      get: "/service/v1/press-key/{code}"

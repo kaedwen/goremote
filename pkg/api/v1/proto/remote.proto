@@ -1,0 +1,52 @@
+//
+// New here? You may find these links useful:
+//
+// Protobuf:
+//   https://developers.google.com/protocol-buffers/docs/proto3
+//   https://developers.google.com/protocol-buffers/docs/gotutorial
+//
+// GRPC:
+//   https://www.grpc.io/docs/what-is-grpc/introduction/
+//
+// After model was changed, do not forget:
+//   make protobuf
+//
+
+syntax = "proto3";
+option optimize_for = SPEED;
+option go_package = "./gen";
+
+package com.github.kaedwen.v1;
+
+import "google/protobuf/empty.proto";
+
+service Remote {
+  rpc PressKey (KeyRequest) returns (KeyResponse) {}
+  rpc ExecTask (ExecTaskRequest) returns (ExecTaskResponse) {}
+  rpc ListTask (google.protobuf.Empty) returns (ListTaskResponse) {}
+}
+
+message KeyRequest {
+  uint32 code = 1;
+}
+
+message KeyResponse {
+  bool success = 1;
+}
+
+message ExecTaskRequest {
+  string name = 1;
+}
+
+message ExecTaskResponse {
+  bool success = 1;
+  string result = 2;
+}
+
+message ListTaskResponse {
+  repeated Task tasks = 1;
+}
+
+message Task {
+  string name = 1;
+}

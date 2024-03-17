@@ -1,0 +1,8 @@
+openapiOptions:
+  file:
+    # the file name must be the same as one passed to protoc when generating .swagger.json
+    - file: "api/v1/proto/remote.proto"
+      option:
+        info:
+          title: Remote
+          version: "v1"
