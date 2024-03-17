@@ -35,7 +35,7 @@ message KeyResponse {
 }
 
 message ExecTaskRequest {
-  string name = 1;
+  string id = 1;
 }
 
 message ExecTaskResponse {
@@ -48,5 +48,6 @@ message ListTaskResponse {
 }
 
 message Task {
-  string name = 1;
+  string id = 1;
+  optional string name = 2;
 }

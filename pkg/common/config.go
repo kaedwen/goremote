@@ -57,9 +57,9 @@ func (c *ConfigGRPC) Address() string {
 	return net.JoinHostPort(c.ListenHost, fmt.Sprint(c.ListenPort))
 }
 
-func (l TaskDefinitionList) Find(n string) *TaskDefinition {
+func (l TaskDefinitionList) Find(id string) *TaskDefinition {
 	for _, t := range l {
-		if t.Name == n {
+		if t.Id == id {
 			return &t
 		}
 	}

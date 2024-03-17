@@ -53,11 +53,11 @@ func (s *serveRemoteGRPC) PressKey(ctx context.Context, req *gen.KeyRequest) (*g
 }
 
 func (s *serveRemoteGRPC) ExecTask(ctx context.Context, req *gen.ExecTaskRequest) (*gen.ExecTaskResponse, error) {
-	t := s.cfg.Tasks.Find(req.Name)
+	t := s.cfg.Tasks.Find(req.Id)
 	if t == nil {
 		return &gen.ExecTaskResponse{
 			Success: false,
-			Result:  fmt.Sprintf("task with name '%s' not found", req.Name),
+			Result:  fmt.Sprintf("task with id '%s' not found", req.Id),
 		}, nil
 	}
 
@@ -81,7 +81,8 @@ func (s *serveRemoteGRPC) ListTask(ctx context.Context, req *emptypb.Empty) (*ge
 	tasks := []*gen.Task{}
 	for _, t := range s.cfg.Tasks {
 		tasks = append(tasks, &gen.Task{
-			Name: t.Name,
+			Id:   t.Id,
+			Name: &t.Name,
 		})
 	}
 

@@ -2,17 +2,22 @@ logging:
   level: info
 
 tasks:
-- name: increase_volume
-  displayName: Increase Volume
+- id: increase_volume
+  name: Increase Volume
   cmd: wpctl
   args:
   - set-volume
   - '@DEFAULT_AUDIO_SINK@'
   - 5%+
-- name: decrease_volume
-  displayName: Decrease Volume
+- id: decrease_volume
+  name: Decrease Volume
   cmd: wpctl
   args:
   - set-volume
   - '@DEFAULT_AUDIO_SINK@'
   - 5%-
+- id: decrease_volume_script
+  name: Decrease Volume Script
+  script: |
+    #!/bin/bash
+    wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
