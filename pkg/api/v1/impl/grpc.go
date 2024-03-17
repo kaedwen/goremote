@@ -3,13 +3,11 @@ package impl
 import (
 	"context"
 	"fmt"
-	"runtime"
-	"time"
 
+	"github.com/bendahl/uinput"
 	"github.com/kaedwen/goremote/pkg/api/v1/gen"
 	"github.com/kaedwen/goremote/pkg/common"
 	"github.com/kaedwen/goremote/pkg/task"
-	"github.com/micmonay/keybd_event"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -30,25 +28,23 @@ type serveRemoteGRPC struct {
 }
 
 func (s *serveRemoteGRPC) PressKey(ctx context.Context, req *gen.KeyRequest) (*gen.KeyResponse, error) {
-	success := true
-
-	kb, err := keybd_event.NewKeyBonding()
+	keyboard, err := uinput.CreateKeyboard("/dev/uinput", []byte("goremote-keyboard"))
 	if err != nil {
-		success = false
+		return &gen.KeyResponse{
+			Success: false,
+		}, nil
 	}
+	defer keyboard.Close()
 
-	// For linux, it is very important to wait 2 seconds
-	if runtime.GOOS == "linux" {
-		time.Sleep(2 * time.Second)
+	err = keyboard.KeyPress(uinput.KeyPause)
+	if err != nil {
+		return &gen.KeyResponse{
+			Success: false,
+		}, nil
 	}
-
-	kb.SetKeys(keybd_event.VK_MUTE)
-	kb.Press()
-	time.Sleep(10 * time.Millisecond)
-	kb.Release()
 
 	return &gen.KeyResponse{
-		Success: success,
+		Success: true,
 	}, nil
 }
 

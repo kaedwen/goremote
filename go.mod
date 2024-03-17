@@ -4,6 +4,7 @@ go 1.22.1
 
 require (
 	github.com/alexflint/go-arg v1.4.3
+	github.com/bendahl/uinput v1.7.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1
 	github.com/micmonay/keybd_event v1.1.2
 	go.uber.org/zap v1.27.0
