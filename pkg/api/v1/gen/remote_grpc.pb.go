@@ -34,9 +34,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Remote_PressKey_FullMethodName = "/com.github.kaedwen.v1.Remote/PressKey"
-	Remote_ExecTask_FullMethodName = "/com.github.kaedwen.v1.Remote/ExecTask"
-	Remote_ListTask_FullMethodName = "/com.github.kaedwen.v1.Remote/ListTask"
+	Remote_PressKey_FullMethodName      = "/com.github.kaedwen.v1.Remote/PressKey"
+	Remote_ExecTask_FullMethodName      = "/com.github.kaedwen.v1.Remote/ExecTask"
+	Remote_ListTask_FullMethodName      = "/com.github.kaedwen.v1.Remote/ListTask"
+	Remote_MouseClick_FullMethodName    = "/com.github.kaedwen.v1.Remote/MouseClick"
+	Remote_MouseMove_FullMethodName     = "/com.github.kaedwen.v1.Remote/MouseMove"
+	Remote_MousePosition_FullMethodName = "/com.github.kaedwen.v1.Remote/MousePosition"
 )
 
 // RemoteClient is the client API for Remote service.
@@ -46,6 +49,9 @@ type RemoteClient interface {
 	PressKey(ctx context.Context, in *KeyRequest, opts ...grpc.CallOption) (*KeyResponse, error)
 	ExecTask(ctx context.Context, in *ExecTaskRequest, opts ...grpc.CallOption) (*ExecTaskResponse, error)
 	ListTask(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListTaskResponse, error)
+	MouseClick(ctx context.Context, in *MouseClickRequest, opts ...grpc.CallOption) (*MouseClickResponse, error)
+	MouseMove(ctx context.Context, in *MouseMoveRequest, opts ...grpc.CallOption) (*MouseMoveResponse, error)
+	MousePosition(ctx context.Context, in *MousePositionRequest, opts ...grpc.CallOption) (*MousePositionResponse, error)
 }
 
 type remoteClient struct {
@@ -83,6 +89,33 @@ func (c *remoteClient) ListTask(ctx context.Context, in *emptypb.Empty, opts ...
 	return out, nil
 }
 
+func (c *remoteClient) MouseClick(ctx context.Context, in *MouseClickRequest, opts ...grpc.CallOption) (*MouseClickResponse, error) {
+	out := new(MouseClickResponse)
+	err := c.cc.Invoke(ctx, Remote_MouseClick_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remoteClient) MouseMove(ctx context.Context, in *MouseMoveRequest, opts ...grpc.CallOption) (*MouseMoveResponse, error) {
+	out := new(MouseMoveResponse)
+	err := c.cc.Invoke(ctx, Remote_MouseMove_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *remoteClient) MousePosition(ctx context.Context, in *MousePositionRequest, opts ...grpc.CallOption) (*MousePositionResponse, error) {
+	out := new(MousePositionResponse)
+	err := c.cc.Invoke(ctx, Remote_MousePosition_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RemoteServer is the server API for Remote service.
 // All implementations must embed UnimplementedRemoteServer
 // for forward compatibility
@@ -90,6 +123,9 @@ type RemoteServer interface {
 	PressKey(context.Context, *KeyRequest) (*KeyResponse, error)
 	ExecTask(context.Context, *ExecTaskRequest) (*ExecTaskResponse, error)
 	ListTask(context.Context, *emptypb.Empty) (*ListTaskResponse, error)
+	MouseClick(context.Context, *MouseClickRequest) (*MouseClickResponse, error)
+	MouseMove(context.Context, *MouseMoveRequest) (*MouseMoveResponse, error)
+	MousePosition(context.Context, *MousePositionRequest) (*MousePositionResponse, error)
 	mustEmbedUnimplementedRemoteServer()
 }
 
@@ -105,6 +141,15 @@ func (UnimplementedRemoteServer) ExecTask(context.Context, *ExecTaskRequest) (*E
 }
 func (UnimplementedRemoteServer) ListTask(context.Context, *emptypb.Empty) (*ListTaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTask not implemented")
+}
+func (UnimplementedRemoteServer) MouseClick(context.Context, *MouseClickRequest) (*MouseClickResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MouseClick not implemented")
+}
+func (UnimplementedRemoteServer) MouseMove(context.Context, *MouseMoveRequest) (*MouseMoveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MouseMove not implemented")
+}
+func (UnimplementedRemoteServer) MousePosition(context.Context, *MousePositionRequest) (*MousePositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MousePosition not implemented")
 }
 func (UnimplementedRemoteServer) mustEmbedUnimplementedRemoteServer() {}
 
@@ -173,6 +218,60 @@ func _Remote_ListTask_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Remote_MouseClick_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MouseClickRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemoteServer).MouseClick(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Remote_MouseClick_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemoteServer).MouseClick(ctx, req.(*MouseClickRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Remote_MouseMove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MouseMoveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemoteServer).MouseMove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Remote_MouseMove_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemoteServer).MouseMove(ctx, req.(*MouseMoveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Remote_MousePosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MousePositionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemoteServer).MousePosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Remote_MousePosition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemoteServer).MousePosition(ctx, req.(*MousePositionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Remote_ServiceDesc is the grpc.ServiceDesc for Remote service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -191,6 +290,18 @@ var Remote_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListTask",
 			Handler:    _Remote_ListTask_Handler,
+		},
+		{
+			MethodName: "MouseClick",
+			Handler:    _Remote_MouseClick_Handler,
+		},
+		{
+			MethodName: "MouseMove",
+			Handler:    _Remote_MouseMove_Handler,
+		},
+		{
+			MethodName: "MousePosition",
+			Handler:    _Remote_MousePosition_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

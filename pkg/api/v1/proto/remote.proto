@@ -24,6 +24,9 @@ service Remote {
   rpc PressKey (KeyRequest) returns (KeyResponse) {}
   rpc ExecTask (ExecTaskRequest) returns (ExecTaskResponse) {}
   rpc ListTask (google.protobuf.Empty) returns (ListTaskResponse) {}
+  rpc MouseClick (MouseClickRequest) returns (MouseClickResponse) {}
+  rpc MouseMove (MouseMoveRequest) returns (MouseMoveResponse) {}
+  rpc MousePosition (MousePositionRequest) returns (MousePositionResponse) {}
 }
 
 message KeyRequest {
@@ -36,15 +39,43 @@ message KeyResponse {
 
 message ExecTaskRequest {
   string id = 1;
+  repeated string args = 2;
 }
 
 message ExecTaskResponse {
   bool success = 1;
-  string result = 2;
+  repeated string results = 2;
+  optional string message = 3;
 }
 
 message ListTaskResponse {
   repeated Task tasks = 1;
+}
+
+message MouseClickRequest {
+  uint32 code = 1;
+}
+
+message MouseClickResponse {
+  bool success = 1;
+}
+
+message MouseMoveRequest {
+  uint32 delta = 1;
+  uint32 direction = 2;
+}
+
+message MouseMoveResponse {
+  bool success = 1;
+}
+
+message MousePositionRequest {
+  uint32 x = 1;
+  uint32 y = 2;
+}
+
+message MousePositionResponse {
+  bool success = 1;
 }
 
 message Task {

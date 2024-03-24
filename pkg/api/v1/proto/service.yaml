@@ -18,4 +18,15 @@ usage:
 http:
   rules:
     - selector: com.github.kaedwen.v1.Remote.PressKey
-      get: "/service/v1/press-key/{code}"
+      post: "/service/v1/press-key/{code}"
+    - selector: com.github.kaedwen.v1.Remote.ExecTask
+      post: "/service/v1/exec-task/{id}"
+      body: "*"
+    - selector: com.github.kaedwen.v1.Remote.MouseClick
+      post: "/service/v1/click-mouse/{code}"
+    - selector: com.github.kaedwen.v1.Remote.MouseMove
+      post: "/service/v1/move-mouse"
+      body: "*"
+    - selector: com.github.kaedwen.v1.Remote.MousePosition
+      post: "/service/v1/position-mouse"
+      body: "*"

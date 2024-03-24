@@ -21,3 +21,10 @@ tasks:
   script: |
     #!/bin/bash
     wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+- id: select_window
+  script: |
+    TARGET=$(hyprctl -j clients | jq -r 'map(select(.class == "chromium" and (.title | test("{{ index .args 0 }}"; "i")))) | map(.address)[0]')
+    hyprctl dispatch focuswindow address:$TARGET
+- id: poweroff
+  script: |
+    sudo poweroff
