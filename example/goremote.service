@@ -1,0 +1,10 @@
+[Unit]
+Description=Goremote GRPC/HTTP endpoint
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/goremote
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

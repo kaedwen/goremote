@@ -67,6 +67,10 @@ func newServer(cfg *common.ConfigGRPC, lg common.Logger) *GrpcServer {
 		grpc.MaxSendMsgSize(MaxSendMessageSize),
 		grpc.ReadBufferSize(ConnReadBufferSize),
 		grpc.WriteBufferSize(ConnWriteBufferSize),
+		grpc.UnaryInterceptor(func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
+			lg.Info("Received request", zap.Any("request", req), zap.String("method", info.FullMethod))
+			return handler(ctx, req)
+		}),
 	}
 
 	s := &GrpcServer{grpc.NewServer(opts...), lg}
