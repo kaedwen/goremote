@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/alexflint/go-arg"
@@ -83,21 +84,35 @@ func (c *Config) MustParse() {
 	arg.MustParse(&c.GRPC)
 	arg.MustParse(&c.HTTP)
 
-	// set to default location
-	if c.Common.ConfigFile == nil {
-		if val, err := os.UserConfigDir(); err == nil {
-			c.Common.ConfigFile = Ptr(filepath.Join(val, "goremote", "config.yaml"))
-		}
+	cl := []string{}
+	if c.Common.ConfigFile != nil {
+		cl = append(cl, *c.Common.ConfigFile)
 	}
 
-	if c.Common.ConfigFile != nil {
-		cf := *c.Common.ConfigFile
-		if _, err := os.Stat(cf); err == nil {
-			if cd, err := os.ReadFile(cf); err == nil {
-				if err := yaml.Unmarshal(cd, c); err != nil {
-					panic(err)
-				}
+	// set to default location
+	if runtime.GOOS == "linux" {
+		if val, err := os.UserConfigDir(); err == nil {
+			cl = append(cl, filepath.Join(val, "goremote", "config.yaml"))
+		}
+
+		cl = append(cl, filepath.Join("/etc", "goremote", "config.yaml"))
+	}
+
+	if cf := findConfig(cl); cf != nil {
+		if cd, err := os.ReadFile(*cf); err == nil {
+			if err := yaml.Unmarshal(cd, c); err != nil {
+				panic(err)
 			}
 		}
 	}
+}
+
+func findConfig(l []string) *string {
+	for _, c := range l {
+		if _, err := os.Stat(c); err == nil {
+			return &c
+		}
+	}
+
+	return nil
 }
