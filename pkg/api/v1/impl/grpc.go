@@ -2,10 +2,10 @@ package impl
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/bendahl/uinput"
+	autils "github.com/kaedwen/goremote/pkg/api/utils"
 	"github.com/kaedwen/goremote/pkg/api/v1/gen"
 	"github.com/kaedwen/goremote/pkg/common"
 	"github.com/kaedwen/goremote/pkg/task"
@@ -13,6 +13,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 // RegisterGRPC will be used by service descriptor
@@ -69,14 +70,31 @@ func (s *serveRemoteGRPC) ExecTask(ctx context.Context, req *gen.ExecTaskRequest
 		}, nil
 	}
 
-	var result []string
-	if err := json.Unmarshal(td, &result); err != nil {
-		s.lg.Info("failed to parse result", zap.Error(err))
+	if t.ResultType != nil {
+		var result *structpb.Value
+		switch *t.ResultType {
+		case common.TaskResultTypeJson:
+			if result, err = autils.FromJson(td); err != nil {
+				s.lg.Error("failed to parse result", zap.Error(err))
+			}
+		case common.TaskResultTypeYaml:
+			if result, err = autils.FromYaml(td); err != nil {
+				s.lg.Error("failed to parse result", zap.Error(err))
+			}
+		case common.TaskResultTypePlain:
+			if result, err = autils.FromPlain(td); err != nil {
+				s.lg.Error("failed to parse result", zap.Error(err))
+			}
+		}
+
+		return &gen.ExecTaskResponse{
+			Success: true,
+			Result:  result,
+		}, nil
 	}
 
 	return &gen.ExecTaskResponse{
 		Success: true,
-		Results: result,
 	}, nil
 }
 

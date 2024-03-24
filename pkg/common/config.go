@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/alexflint/go-arg"
@@ -81,6 +82,13 @@ func (c *Config) MustParse() {
 	arg.MustParse(&c.Common)
 	arg.MustParse(&c.GRPC)
 	arg.MustParse(&c.HTTP)
+
+	// set to default location
+	if c.Common.ConfigFile == nil {
+		if val, err := os.UserConfigDir(); err == nil {
+			c.Common.ConfigFile = Ptr(filepath.Join(val, "goremote", "config.yaml"))
+		}
+	}
 
 	if c.Common.ConfigFile != nil {
 		cf := *c.Common.ConfigFile

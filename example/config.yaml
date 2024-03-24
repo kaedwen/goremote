@@ -1,6 +1,9 @@
 logging:
   level: info
 
+grpc:
+  reflection: true
+
 tasks:
 - id: increase_volume
   name: Increase Volume
@@ -22,9 +25,16 @@ tasks:
     #!/bin/bash
     wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
 - id: select_window
+  name: Select Window
   script: |
     TARGET=$(hyprctl -j clients | jq -r 'map(select(.class == "chromium" and (.title | test("{{ index .args 0 }}"; "i")))) | map(.address)[0]')
     hyprctl dispatch focuswindow address:$TARGET
+- id: selected_window_info
+  name: Selected Window Info
+  result: json
+  script: |
+    hyprctl clients -j | jq 'sort_by(.focusHistoryID)[0]'
 - id: poweroff
+  name: Poweroff
   script: |
     sudo poweroff

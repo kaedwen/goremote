@@ -11,7 +11,6 @@
       "mode": "auto",
       "program": "${workspaceFolder}/main.go",
       "env": {
-        "GRPC_REFLECTION": "true",
         "CONFIG_FILE": "${workspaceFolder}/example/config.yaml"
       }
     }

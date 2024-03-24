@@ -19,6 +19,7 @@ option go_package = "./gen";
 package com.github.kaedwen.v1;
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
 
 service Remote {
   rpc PressKey (KeyRequest) returns (KeyResponse) {}
@@ -44,7 +45,7 @@ message ExecTaskRequest {
 
 message ExecTaskResponse {
   bool success = 1;
-  repeated string results = 2;
+  optional google.protobuf.Value result = 2;
   optional string message = 3;
 }
 
